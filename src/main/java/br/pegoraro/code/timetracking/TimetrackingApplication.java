@@ -2,21 +2,14 @@ package br.pegoraro.code.timetracking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import java.util.logging.Logger;
+
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
+@Slf4j
 public class TimetrackingApplication {
-
-  private static Logger logger = Logger.getLogger(TimetrackingApplication.class);
 
   public static void main(String[] args) {
     SpringApplication.run(TimetrackingApplication.class, args);
   }
-
-  @RequestMapping("/")
-  public String home() {
-    logger.info("Handling home");
-    return "Hello World";
-  }
-
 }
