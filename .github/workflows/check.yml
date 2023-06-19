@@ -1,7 +1,8 @@
 name: Checks and Tests
 
 on:
-
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   check-migration-files:
