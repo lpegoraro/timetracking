@@ -16,7 +16,7 @@ jobs:
         run: |
           for file in ./db/migration/postgres/*.sql; do
             filename=$(basename "$file")
-            if ! [[ "$filename" =~ ^V(\d+)__(\w+)(__(\w+))?\.sql$ ]]; then
+            if ! [[ "$filename" =~ ^[VR][0-9]+__.*\.sql$ ]]; then
               echo "File $filename does not match Flyway migration filename format."
               exit 1
             fi
