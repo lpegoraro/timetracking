@@ -1,16 +1,7 @@
 name: Checks and Tests
 
 on:
-  workflow_dispatch:
-    inputs:
-      run-info:
-        description: 'Only run info'
-        type: boolean
-        required: false
-      baselineOnMigrate:
-        description: 'Baseline on migrate'
-        type: boolean
-        required: false
+
 
 jobs:
   check-migration-files:
@@ -22,7 +13,7 @@ jobs:
         run: |
           for file in ./db/migration/postgres/*.sql; do
             filename=$(basename "$file")
-            if ! [[ "$filename" =~ ^V[0-9]+__.*\.sql$ ]]; then
+            if ! [[ "$filename" =~ ^V(\d+)__(\w+)(__(\w+))?\.sql$ ]]; then
               echo "File $filename does not match Flyway migration filename format."
               exit 1
             fi
