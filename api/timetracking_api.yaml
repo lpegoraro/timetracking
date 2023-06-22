@@ -86,4 +86,32 @@ paths:
           description: "User unauthorized"
         '409':
           description: "Project is conflict due unique name"
-
+components:
+  schemas:
+    Login:
+      type: object
+      properties:
+        user_identity:
+          type: string
+          example: username, user@domain.com
+        password:
+          type: string
+    Signup:
+      type: object
+      properties:
+        username:
+          type: string
+          example: username
+        email:
+          type: string
+          example: user@domain.com
+        displayName:
+          type: string
+          example: My Name
+        password:
+          type: string
+    Project:
+      type: object
+      properties:
+        name:
+          type: string
