@@ -1,1 +1,89 @@
-version: ""
+openapi: 3.0.3
+info:
+  title: TimeTracking API
+  description: |
+    This API allow you to track your activities during the day, it can be used for a single account or multiple account,
+    if you want to track multiple projects at the same time.
+    Also it can generate a report aggregating or filtering by project and time.
+  contact:
+    email: pegorarohluiz@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+externalDocs:
+  description: Use our Web-UI
+  url: https://TBD.not.yet
+tags:
+  - name: project
+    description: Project that will accumulate tasks
+  - name: tasks
+    description: |
+      Tasks are the smallest increment, will contain the time needed to solve, and they can be re-used, 
+      using the same description, case sensitive.
+  - name: report
+    description: |
+      You can generate or consult the previous generated reports, filter or aggregate to generate the report
+      are done by project and time.
+paths:
+  /signup:
+    post:
+      tags:
+        - project
+        - tasks
+        - report
+      requestBody:
+        description: User Sign-in form
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Signup'
+      summary: Create a user that can create projects, tasks , reports and track time.
+      responses:
+        '200':
+          description: "User created"
+        '400':
+          description: "Bad request, invalid form"
+        '409':
+          description: "User already exists"
+        '412':
+          description: "Password didn't meet requirements"
+  /login:
+    post:
+      tags:
+        - project
+        - tasks
+        - report
+      requestBody:
+        description: User Sign-in form
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      summary: Login with a user
+      responses:
+        '200':
+          description: "User credentials accepted"
+        '404':
+          description: "User not found"
+        '401':
+          description: "Bad credentials"
+  /project:
+    post:
+      tags:
+        - project
+      requestBody:
+        description: Create a new project under the user tenant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      summary: Creates a user project to gather tasks
+      responses:
+        '200':
+          description: "Project created"
+        '401':
+          description: "User unauthorized"
+        '409':
+          description: "Project is conflict due unique name"
+
