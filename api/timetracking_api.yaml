@@ -1,1 +1,215 @@
-version: ""
+openapi: "3.1.0"
+info:
+  title: Time Tracking API
+  description: This is a sample server for a time tracking API.
+  version: 1.0.0
+paths:
+  /signup:
+    post:
+      summary: Sign up a new team
+      description: Sign up a new team
+      operationId: registerNewTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterNewTeam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamCreated"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /login:
+    post:
+      summary: Login
+      description: Login to an existing team
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    /teams/{teamId}/invite:
+      post:
+        summary: Invite new team member
+        description: Invite a new team member to an existing team
+        operationId: inviteNewTeamMember
+        parameters:
+          - name: teamId
+            in: path
+            description: The ID of the team to invite a new member to
+            required: true
+            schema:
+              type: string
+        requestBody:
+            required: true
+            content:
+                application/json:
+                schema:
+                    $ref: "#/components/schemas/InviteNewTeamMember"
+        responses:
+            "200":
+                description: OK
+                content:
+                    application/json:
+                    schema:
+                        $ref: "#/components/schemas/InviteSent"
+            "400":
+                description: Bad Request
+                content:
+                    application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+    /teams/{teamId}/members/{memberEmail}:
+      delete:
+        summary: Remove team member
+        description: Remove a team member from an existing team
+        operationId: removeTeamMember
+        parameters:
+          - name: teamId
+            in: path
+            description: The ID of the team to remove a member from
+            required: true
+            schema:
+              type: string
+          - name: memberEmail
+            in: path
+            description: The email of the member to remove
+            required: true
+            schema:
+              type: string
+        responses:
+            "200":
+                description: OK
+                content:
+                    application/json:
+                    schema:
+                        $ref: "#/components/schemas/Team"
+            "400":
+                description: Bad Request
+                content:
+                    application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+    /teams/{teamId}/members:
+        get:
+            summary: Get team members
+            description: Get all members of an existing team
+            operationId: getTeamMembers
+            parameters:
+            - name: teamId
+              in: path
+              description: The ID of the team to get members from
+              required: true
+              schema:
+                type: string
+            - name: limit
+              in: query
+              description: The maximum number of members to return
+              required: false
+              schema:
+                type: integer
+            - name: offset
+              in: query
+              description: The number of members to skip
+              required: false
+              schema:
+                  type: integer
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                        schema:
+                            $ref: "#/components/schemas/Team"
+                "400":
+                    description: Bad Request
+                    content:
+                        application/json:
+                        schema:
+                            $ref: "#/components/schemas/Error"
+components:
+    schemas:
+        RegisterNewTeam:
+          type: object
+          properties:
+              name:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+              teamName:
+                type: string
+        TeamCreated:
+          type: object
+          properties:
+              teamId:
+                type: string
+              _self:
+                type: string
+        Login:
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+        Team:
+          type: object
+          properties:
+            teamId:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            members:
+              type: array
+            items:
+                type: object
+                properties:
+                  memberId:
+                      type: string
+                  name:
+                      type: string
+                  email:
+                      type: string
+        InviteNewTeamMember:
+          type: object
+          properties:
+            email:
+              type: string
+        InviteSent:
+          type: object
+          properties:
+            inviteUrl:
+              type: string
+        Error:
+          type: object
+          properties:
+            message:
+              type: string
