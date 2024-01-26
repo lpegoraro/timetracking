@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   user_id integer NOT NULL UNIQUE,
   first_name varchar(255),
   last_name varchar(255),
+  profile_image varchar(255),
   created_at timestamp NOT NULL,
   updated_at timestamp NOT NULL,
   PRIMARY KEY (id)
