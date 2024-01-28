@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 	"timetracking/timetracking"
 )
 
@@ -30,13 +32,13 @@ func main() {
 	}
 
 	sigs := make(chan os.Signal, 1)
-
+	signal.Notify(sigs, os.Interrupt, os.Kill, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGKILL)
 	select {
 	case <-c.Done():
 		cause := context.Cause(c)
 		logger.Info("main context done with cause: ", cause, c.Err())
-	case signal := <-sigs:
-		cancel(errors.New(fmt.Sprintf("terminate Signal %s received", signal.String())))
+	case sig := <-sigs:
+		cancel(errors.New(fmt.Sprintf("terminate Signal %s received", sig.String())))
 	}
 }
 
