@@ -3,6 +3,7 @@ package timetracking
 import (
 	ctx "context"
 	"log/slog"
+	"timetracking/timetracking/register"
 )
 
 type MainService interface {
@@ -42,6 +43,11 @@ func (s *mainService) Start() error {
 }
 
 func (s *mainService) InitializeAPI() error {
+	registerService := register.NewService(s.logger)
+	if err := registerService.Register(); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -25,3 +25,10 @@ type Role struct {
 	Id          string
 	Description string
 }
+
+type SignupRequest struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	TeamName string `json:"team_name"`
+}
