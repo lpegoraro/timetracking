@@ -21,18 +21,33 @@ CREATE TABLE IF NOT EXISTS user_profiles (
 
 CREATE TABLE IF NOT EXISTS user_roles (
   id varchar(40),
-  user_id integer NOT NULL UNIQUE user_id,role_id,
+  user_id integer NOT NULL,
   role_id integer NOT NULL,
   created_at timestamp NOT NULL,
   updated_at timestamp NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY user_id (user_id,role_id),
-
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS roles (
   id varchar(40),
   name varchar(255) NOT NULL UNIQUE,
+  created_at timestamp NOT NULL,
+  updated_at timestamp NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS teams (
+  id varchar(40),
+  name varchar(255) NOT NULL UNIQUE,
+  created_at timestamp NOT NULL,
+  updated_at timestamp NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS team_members (
+  id varchar(40),
+  team_id integer NOT NULL,
+  user_id integer NOT NULL,
   created_at timestamp NOT NULL,
   updated_at timestamp NOT NULL,
   PRIMARY KEY (id)
