@@ -14,20 +14,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RegisterNewTeam"
+              $ref: "#/components/schemas/RegisterNewTeamRequest"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TeamCreated"
+                $ref: "#/components/schemas/TeamCreatedResponse"
         "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
   /login:
     post:
       summary: Login
@@ -38,122 +38,124 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Login"
+              $ref: "#/components/schemas/LoginRequest"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Team"
+                $ref: "#/components/schemas/TeamMemberResponse"
         "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-    /teams/{teamId}/invite:
-      post:
-        summary: Invite new team member
-        description: Invite a new team member to an existing team
-        operationId: inviteNewTeamMember
-        parameters:
+                $ref: "#/components/schemas/ErrorResponse"
+  /teams/{teamId}/invite:
+    post:
+      summary: Invite new team member
+      description: Invite a new team member to an existing team
+      operationId: inviteNewTeamMember
+      parameters:
+        - name: teamId
+          in: path
+          description: The ID of the team to invite a new member to
+          required: true
+          schema:
+            type: string
+      requestBody:
+          required: true
+          content:
+              application/json:
+              schema:
+                  $ref: "#/components/schemas/InviteNewTeamMemberRequest"
+      responses:
+          "200":
+              description: OK
+              content:
+                  application/json:
+                  schema:
+                      $ref: "#/components/schemas/InviteSentResponse"
+          "400":
+              description: Bad Request
+              content:
+                  application/json:
+                  schema:
+                      $ref: "#/components/schemas/ErrorResponse"
+  /teams/{teamId}/members/{memberEmail}:
+    delete:
+      summary: Remove team member
+      description: Remove a team member from an existing team
+      operationId: removeTeamMember
+      parameters:
+        - name: teamId
+          in: path
+          description: The ID of the team to remove a member from
+          required: true
+          schema:
+            type: string
+        - name: memberEmail
+          in: path
+          description: The email of the member to remove
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+              description: OK
+              content:
+                  application/json:
+                  schema:
+                      $ref: "#/components/schemas/TeamResponse"
+          "400":
+              description: Bad Request
+              content:
+                  application/json:
+                  schema:
+                      $ref: "#/components/schemas/ErrorResponse"
+  /teams/{teamId}/members:
+      get:
+          summary: Get team members
+          description: Get all members of an existing team
+          operationId: getTeamMembers
+          parameters:
           - name: teamId
             in: path
-            description: The ID of the team to invite a new member to
+            description: The ID of the team to get members from
             required: true
             schema:
               type: string
-        requestBody:
-            required: true
-            content:
-                application/json:
-                schema:
-                    $ref: "#/components/schemas/InviteNewTeamMember"
-        responses:
-            "200":
-                description: OK
-                content:
-                    application/json:
-                    schema:
-                        $ref: "#/components/schemas/InviteSent"
-            "400":
-                description: Bad Request
-                content:
-                    application/json:
-                    schema:
-                        $ref: "#/components/schemas/Error"
-    /teams/{teamId}/members/{memberEmail}:
-      delete:
-        summary: Remove team member
-        description: Remove a team member from an existing team
-        operationId: removeTeamMember
-        parameters:
-          - name: teamId
-            in: path
-            description: The ID of the team to remove a member from
-            required: true
+          - name: limit
+            in: query
+            description: The maximum number of members to return
+            required: false
             schema:
-              type: string
-          - name: memberEmail
-            in: path
-            description: The email of the member to remove
-            required: true
+              type: integer
+          - name: offset
+            in: query
+            description: The number of members to skip
+            required: false
             schema:
-              type: string
-        responses:
-            "200":
-                description: OK
-                content:
-                    application/json:
-                    schema:
-                        $ref: "#/components/schemas/Team"
-            "400":
-                description: Bad Request
-                content:
-                    application/json:
-                    schema:
-                        $ref: "#/components/schemas/Error"
-    /teams/{teamId}/members:
-        get:
-            summary: Get team members
-            description: Get all members of an existing team
-            operationId: getTeamMembers
-            parameters:
-            - name: teamId
-              in: path
-              description: The ID of the team to get members from
-              required: true
-              schema:
-                type: string
-            - name: limit
-              in: query
-              description: The maximum number of members to return
-              required: false
-              schema:
                 type: integer
-            - name: offset
-              in: query
-              description: The number of members to skip
-              required: false
-              schema:
-                  type: integer
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
+          responses:
+              "200":
+                  description: OK
+                  content:
+                      application/json:
+                      type: array
+                      items:
                         schema:
-                            $ref: "#/components/schemas/Team"
-                "400":
-                    description: Bad Request
-                    content:
-                        application/json:
-                        schema:
-                            $ref: "#/components/schemas/Error"
+                          $ref: "#/components/schemas/TeamMemberResponse"
+              "400":
+                  description: Bad Request
+                  content:
+                      application/json:
+                      schema:
+                          $ref: "#/components/schemas/ErrorResponse"
 components:
     schemas:
-        RegisterNewTeam:
+        RegisterNewTeamRequest:
           type: object
           properties:
               name:
@@ -164,24 +166,22 @@ components:
                 type: string
               teamName:
                 type: string
-        TeamCreated:
+        TeamCreatedResponse:
           type: object
           properties:
-              teamId:
+              team_url:
                 type: string
-              _self:
-                type: string
-        Login:
+        LoginRequest:
           type: object
           properties:
             email:
               type: string
             password:
               type: string
-        Team:
+        TeamResponse:
           type: object
           properties:
-            teamId:
+            team_url:
               type: string
             name:
               type: string
@@ -189,27 +189,38 @@ components:
               type: string
             members:
               type: array
-            items:
-                type: object
-                properties:
-                  memberId:
-                      type: string
-                  name:
-                      type: string
-                  email:
-                      type: string
-        InviteNewTeamMember:
+              items:
+                schema:
+                  $ref: "#/components/schemas/TeamMemberResponse"
+        TeamMemberResponse:
+          member_url:
+            type: string
+          name:
+            type: string
+          email:
+            type: string
+          role:
+            type: string
+        InviteNewTeamMemberRequest:
           type: object
           properties:
             email:
               type: string
-        InviteSent:
+            teamName:
+              type: string
+            role:
+              type: string
+        InviteSentResponse:
           type: object
           properties:
             inviteUrl:
               type: string
-        Error:
+            teamName:
+              type: string
+        ErrorResponse:
           type: object
           properties:
+            errorCode:
+              type: integer
             message:
               type: string
